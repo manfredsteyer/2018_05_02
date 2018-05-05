@@ -1,63 +1,86 @@
 <div class="card">
 
-  <div class="header">
-      <h2 class="title">Flight Search</h2>
-  </div>
+    <div class="header">
+        <h2 class="title">Flight Search</h2>
+    </div>
 
-  <div class="content">
-  
-  <form>
-  
-      <div class="form-group">
-          <label>From:</label>
-          <input [(ngModel)]="from" name="from" class="form-control">
-      </div>
-      <div class="form-group">
-          <label>To:</label>
-          <input [(ngModel)]="to" name="to" class="form-control">
-      </div>
-  
-      <div class="form-group">
-          <button 
-              (click)="search()"
-              class="btn btn-default">Search</button>
-  
-          </div>
-  </form>
-  
-  </div>
-  </div>
-  
-  
-  <div class="card">
-  
-      <table class="table table-contensed" *ngIf="flights.length > 0">
-          <thead>
-          <tr>
-              <th>Id</th>
-              <th>From</th>
-              <th>To</th>
-              <th>Date</th>
-              <th></th>
-          </tr>
-          </thead>
-          <tr *ngFor="let f of flights" [class.active]="f === selectedFlight">
-              <td>{{f.id}}</td>
-              <td>{{f.from}}</td>
-              <td>{{f.to }}</td>
-              <td>{{f.date | date:'dd.MM.yyyy HH:mm'}}</td>
-              <td>
-                  <a (click)="select(f)">Select</a> 
-              </td>
-          </tr>
-      </table>
-  
-  </div>
-  
-  
-  <div class="card">
-      <div class="content">
-          <pre>{{ selectedFlight | json }}</pre>
-      </div>
-  </div>
-  
+    <div class="content">
+
+        <form>
+            <div class="form-group">
+                <label>From:</label>
+                <input [(ngModel)]="from"
+                    name="from" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>To:</label>
+                <input [(ngModel)]="to"
+                    name="to" 
+                    class="form-control">
+            </div>
+
+            <div class="form-group">
+                <button [disabled]="!to || !from"
+                (click)="search()"
+                   class="btn btn-default">Search</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+<div class="card">
+
+    <div class="row">
+        <div *ngFor="let f of flights" 
+            class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <flight-card
+                [item]="f"
+                [selected]="basket[f.id]"
+                (selectedChange)="basket[f.id] = $event">
+            </flight-card>
+            <!-- Two-Way-Binding unter Verwendung der "Banana-in-a-Box-Syntax -->
+            <flight-card
+            [item]="f"
+            [(selected)]="basket[f.id]">
+        </flight-card>
+
+        </div>
+    </div>
+    
+    <!-- <table class="table table-contensed">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Date</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tr *ngFor="let f of flights" 
+            [class.active]="f === selectedFlight">
+            <td>{{f.id}}</td>
+            <td>{{f.from | city: 'long'}}</td>
+            <td>{{f.to | city: 'short' }}</td>
+            <td>{{f.date | date:'dd.MM.yyyy HH:mm'}}</td>
+            <td>
+                <a (click)="select(f)">Select</a> 
+            </td>
+        </tr>
+    </table> -->
+
+</div>
+
+<div class="card">
+    <div class="content">
+        <pre>{{ basket | json }}</pre>
+    </div>
+</div>
+ 
+
+<div class="card">
+    <div class="content">
+        <!-- {{title}} --> <!-- Alte Zeile  -->
+        <!--<pre>{{ selectedFlight | json }}</pre> <!-- neue Zeile --> 
+    </div>
+</div> 

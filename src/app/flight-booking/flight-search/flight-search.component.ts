@@ -1,53 +1,40 @@
-import { Component, OnInit } from '@angular/core';
-import { Flight } from '../../entities/flight';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-
+import { Component, OnInit } from "@angular/core";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { FlightService } from "./flight.service";
+import { Flight } from "../../entities/flight";
 
 @Component({
-  selector: 'flight-search',
-  templateUrl: './flight-search.component.html',
-  styleUrls: ['./flight-search.component.css']
+    selector: 'flight-search',
+    templateUrl: './flight-search.component.html'
 })
 export class FlightSearchComponent implements OnInit {
 
-  from: string;
-  to: string;
-  flights: Array<Flight> = [];
-  selectedFlight: Flight;
+    from: string;
+    to: string;
 
-  //private http: HttpClient;
+    // flights: Array<Flight> = [];
 
-  constructor(private http: HttpClient) { 
-    //this.http = http;
-  }
+    //in Service auslagern
+    get flights(): Array<Flight> {
+        return this.flightService.flights;
+    }
+    selectedFlight: Flight;
 
-  ngOnInit() {
-  }
+    basket: object = {   // <-- Neue Eigenschaft
+        "3": true,
+        "5": true
+    };
+    
+    constructor(private flightService: FlightService) { }
 
-  select(flight: Flight): void {
-    this.selectedFlight = flight;
-  }
+    ngOnInit() { }
 
-  search(): void {
-
-
-    if (this.from === 'Fürth') {
-      throw new Error('Airport not available');
+    search(): void {
+        // this.flightService.find(this.from,  this.to);
+        this.flightService.load(this.from,  this.to);
     }
 
-    let url = 'http://www.angular.at/api/flight';
-    
-    // let params = new HttpParams().set('from', this.from).set('to', this.to);
-    let params = { from: this.from, to: this.to };
-
-    // let headers = new HttpHeaders().set('accept', 'application/json');
-    let headers = { accept: 'application/json'};
-
-    this.http.get<Flight[]>(url, { params, headers }).subscribe(
-      flights => { this.flights = flights; },
-      err => { console.error('Error loading flights', err); }
-    );
-
-  }
-
+    select(f: Flight): void {
+        this.selectedFlight = f;
+    }
 }
